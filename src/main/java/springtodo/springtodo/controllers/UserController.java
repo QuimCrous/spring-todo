@@ -11,6 +11,7 @@ import springtodo.springtodo.models.Todo;
 import springtodo.springtodo.services.interfaces.UserServiceInterface;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -20,8 +21,8 @@ public class UserController {
 
     @PostMapping("/todos/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Todo createTodo(@RequestParam Long id, @RequestBody String title){
-        return userServiceInterface.createTodo(title, id);
+    public Todo createTodo(@RequestBody TodoDTO todoDTO){
+        return userServiceInterface.createTodo(todoDTO.getTitle(), todoDTO.getUserName(), todoDTO.isCompleted());
     }
 
     @PutMapping("/todos/edit")
@@ -39,24 +40,14 @@ public class UserController {
 
     @GetMapping("/todos/get-todos")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<List<Object[]>>> getTodosThree(Pageable pageable){
-        Page<List<Object[]>> todoPage = userServiceInterface.getTodos(pageable);
+    public ResponseEntity<Page<List<Object[]>>> getTodos(@RequestParam(required = false) String searchText, @RequestParam(required = false) String userName, Pageable pageable){
+        Optional<String> optionalText = Optional.ofNullable(searchText);
+        Optional<String> optionalUserName = Optional.ofNullable(userName);
+        Page<List<Object[]>> todoPage = userServiceInterface.getTodos(pageable, optionalText, optionalUserName);
         return ResponseEntity.ok(todoPage);
     }
 
-    @GetMapping("/todos/get-title")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<List<Object[]>>> getTodosByTitleContaining(@RequestBody String title, Pageable pageable){
-        Page<List<Object[]>> todoPage = userServiceInterface.getTodosByTitleContaining(title, pageable);
-        return ResponseEntity.ok(todoPage);
-    }
 
-    @GetMapping("/todos/get-username")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<List<Object[]>>> getTodosByUserName(@RequestBody String userName, Pageable pageable){
-        Page<List<Object[]>> todoPage = userServiceInterface.getTodosByUserName(userName, pageable);
-        return ResponseEntity.ok(todoPage);
-    }
 
 
 }

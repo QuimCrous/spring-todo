@@ -25,4 +25,7 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     @Query("SELECT t.title, u.userName, u.userAddress.country, t.completed FROM Todo t JOIN t.todoUser u WHERE u.userName LIKE %:username%")
     Page<List<Object[]>> findTodoDetailsByUsername(@Param("username") String username, Pageable pageable);
 
+    @Query("SELECT t.title, u.userName, u.userAddress.country, t.completed FROM Todo t JOIN t.todoUser u WHERE (:title IS NULL OR t.title LIKE %:title%) AND (:username IS NOT NULL AND u.userName LIKE %:username%)")
+    Page<List<Object[]>> findTodoDetails(@Param("title") String title, @Param("username") String username, Pageable pageable);
+
 }

@@ -12,6 +12,7 @@ import springtodo.springtodo.services.interfaces.UserServiceInterface;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserServiceInterface {
@@ -22,18 +23,9 @@ public class UserService implements UserServiceInterface {
     @Autowired
     TodoRepository todoRepository;
 
-    public Todo createTodo(String title, Long userId) {
-        User user = userRepository.findById(userId).get();
-        return todoRepository.save(new Todo(title, false, user));
-    }
-
-
-    public Page<List<Object[]>> getTodosByTitleContaining(String searchText, Pageable pageable){
-        return todoRepository.findTodoDetailsTitleContaining(searchText, pageable);
-    }
-
-    public Page<List<Object[]>> getTodosByUserName(String userName, Pageable pageable){
-        return todoRepository.findTodoDetailsByUsername(userName, pageable);
+    public Todo createTodo(String title, String userName, boolean completed) {
+        User user = userRepository.findByUserName(userName).get();
+        return todoRepository.save(new Todo(title, completed, user));
     }
 
     public Todo editTodo(String title, boolean isCompleted, Long todoId){
@@ -48,10 +40,16 @@ public class UserService implements UserServiceInterface {
         todoRepository.delete(todo);
     }
 
+    public Page<List<Object[]>> getTodos(Pageable pageable, Optional<String> searchText, Optional<String> userName){
+        if (searchText.isEmpty() && userName.isEmpty()) {
+            return todoRepository.findTodoDetails(pageable);
+        } else if (searchText.isPresent() && userName.isEmpty()) {
+            return todoRepository.findTodoDetailsTitleContaining(searchText.get(), pageable);
+        } else if (searchText.isEmpty() && userName.isPresent()) {
+            return todoRepository.findTodoDetailsByUsername(userName.get(), pageable);
+        } else {
+            return todoRepository.findTodoDetails(searchText.get(), userName.get(), pageable);
+        }
 
-
-    public Page<List<Object[]>> getTodos(Pageable pageable){
-
-        return todoRepository.findTodoDetails(pageable);
     }
 }

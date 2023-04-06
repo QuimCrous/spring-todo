@@ -7,12 +7,11 @@ import springtodo.springtodo.models.Todo;
 
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserServiceInterface {
-    Todo createTodo(String title, Long userId);
+    Todo createTodo(String title, String userName, boolean completed);
     Todo editTodo(String title, boolean isCompleted, Long todoId);
     void deleteTodo(Long todoId);
-    Page<List<Object[]>> getTodos(Pageable pageable);
-    Page<List<Object[]>> getTodosByTitleContaining(String searchText, Pageable pageable);
-    Page<List<Object[]>> getTodosByUserName(String userName, Pageable pageable);
+    Page<List<Object[]>> getTodos(Pageable pageable, Optional<String> searchText, Optional<String> userName);
 }
