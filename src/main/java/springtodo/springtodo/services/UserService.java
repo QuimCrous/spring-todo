@@ -3,7 +3,9 @@ package springtodo.springtodo.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import springtodo.springtodo.models.Todo;
 import springtodo.springtodo.models.User;
 import springtodo.springtodo.repositories.TodoRepository;
@@ -25,18 +27,22 @@ public class UserService implements UserServiceInterface {
 
     public Todo createTodo(String title, String userName, boolean completed) {
         User user = userRepository.findByUserName(userName).get();
+
         return todoRepository.save(new Todo(title, completed, user));
     }
 
-    public Todo editTodo(String title, boolean isCompleted, Long todoId){
+    public Todo editTodo(String userName, String title, boolean isCompleted, Long todoId){
         Todo todo = todoRepository.findById(todoId).get();
+        if (!todo.getTodoUser().getUserName().equals(userName)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the user asigned to this Todo");
         todo.setTitle(title);
         todo.setCompleted(isCompleted);
         return todoRepository.save(todo);
     }
 
-    public void deleteTodo(Long todoId){
+    public void deleteTodo(String userName, Long todoId){
+
         Todo todo = todoRepository.findById(todoId).get();
+        if (!todo.getTodoUser().getUserName().equals(userName)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the user asigned to this Todo");
         todoRepository.delete(todo);
     }
 
