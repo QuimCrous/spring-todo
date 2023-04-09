@@ -1,5 +1,6 @@
 <h2 align="center">Todo API</h2>
 
+[![CodeFactor](https://www.codefactor.io/repository/github/quimcrous/spring-todo/badge)](https://www.codefactor.io/repository/github/quimcrous/spring-todo)
 
 This is an API I have created for a technical test. In this project, I have created a REST API for tasks, where users can view, create, edit, and delete them while adding a layer of security to perform checks (such as ensuring that the user is logged in to access the different functions and that they cannot edit or delete tasks from other users)
 
