@@ -78,7 +78,7 @@ public class ControllerTest {
     @Test
     @DisplayName("Create Todo works ok")
     void createTodoWorksOk() throws Exception{
-        TodoDTO todoDTO = new TodoDTO("Test creation",true, "miky_doe");
+        TodoDTO todoDTO = new TodoDTO("Test creation",true, 2L);
         String body = objectMapper.writeValueAsString(todoDTO);
         MvcResult mvcResult = mockMvc.perform(post("/todos/create").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
         Assertions.assertTrue(todoRepository.findById(21L).isPresent());
@@ -88,7 +88,7 @@ public class ControllerTest {
     @DisplayName("Edit Todo works ok")
     @WithMockUser("jhonny_87")
     void editTodoWorksOk() throws Exception {
-        TodoDTO todoDTO = new TodoDTO("Make test to controllers 2",true, "");
+        TodoDTO todoDTO = new TodoDTO("Make test to controllers 2",true, null);
         String body = objectMapper.writeValueAsString(todoDTO);
         MvcResult mvcResult = mockMvc.perform(put("/todos/edit").param("id","1").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
@@ -99,7 +99,7 @@ public class ControllerTest {
     @DisplayName("Edit Todo throws exception wrong user")
     @WithMockUser("miky_doe")
     void editTodoThrowsExceptionNotTheUserOfTheTodo() throws Exception {
-        TodoDTO todoDTO = new TodoDTO("Make test to controllers 2",true, "");
+        TodoDTO todoDTO = new TodoDTO("Make test to controllers 2",true, null);
         String body = objectMapper.writeValueAsString(todoDTO);
         MvcResult mvcResult = mockMvc.perform(put("/todos/edit").param("id","1").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden()).andReturn();
         Assertions.assertTrue(mvcResult.getResolvedException().toString().contains("403 FORBIDDEN \"You are not the user asigned to this Todo\""));

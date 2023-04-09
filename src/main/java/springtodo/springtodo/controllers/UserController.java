@@ -23,7 +23,7 @@ public class UserController {
     @PostMapping("/todos/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Todo createTodo(@RequestBody TodoDTO todoDTO){
-        return userServiceInterface.createTodo(todoDTO.getTitle(), todoDTO.getUserName(), todoDTO.isCompleted());
+        return userServiceInterface.createTodo(todoDTO.getTitle(), todoDTO.getUserId(), todoDTO.isCompleted());
     }
 
     @PutMapping("/todos/edit")

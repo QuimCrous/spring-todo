@@ -25,9 +25,8 @@ public class UserService implements UserServiceInterface {
     @Autowired
     TodoRepository todoRepository;
 
-    public Todo createTodo(String title, String userName, boolean completed) {
-        User user = userRepository.findByUserName(userName).get();
-
+    public Todo createTodo(String title, Long userId, boolean completed) {
+        User user = userRepository.findById(userId).get();
         return todoRepository.save(new Todo(title, completed, user));
     }
 

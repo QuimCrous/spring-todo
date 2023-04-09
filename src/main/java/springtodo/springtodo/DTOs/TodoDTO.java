@@ -1,25 +1,29 @@
 package springtodo.springtodo.DTOs;
 
-public class TodoDTO {
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
+public class TodoDTO {
+    @NotEmpty
+    @Size(min = 1, max = 200)
     private String title;
     private boolean isCompleted;
 
-    private String userName;
+    private Long userId;
 
 
-    public TodoDTO(String title, boolean isCompleted, String userName) {
+    public TodoDTO(String title, boolean isCompleted, Long userId) {
         this.title = title;
         this.isCompleted = isCompleted;
-        this.userName = userName;
+        this.userId = userId;
     }
 
-    public String getUserName() {
-        return userName;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
