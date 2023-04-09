@@ -40,7 +40,6 @@ public class UserService implements UserServiceInterface {
     }
 
     public void deleteTodo(String userName, Long todoId){
-
         Todo todo = todoRepository.findById(todoId).get();
         if (!todo.getTodoUser().getUserName().equals(userName)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the user asigned to this Todo");
         todoRepository.delete(todo);
