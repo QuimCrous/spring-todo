@@ -1,25 +1,5 @@
-Todo backend Project
+<h2 align="center">Todo API</h2>
 
-Título y descripción breve: Empieza con un título y una descripción breve que capturen la esencia de tu API y su propósito.
-
-Información sobre la base de datos: Explica el tipo de base de datos que estás usando y cómo se conecta con tu aplicación. Por ejemplo, puedes incluir información sobre la configuración de la conexión a la base de datos en el archivo application.properties.
-
-Requisitos previos: Detalla los requisitos previos para ejecutar tu API. Por ejemplo, puede ser necesario tener una versión específica de Java instalada.
-
-Instalación: Explica cómo instalar y ejecutar tu API. Por ejemplo, si estás utilizando Maven, puedes incluir un comando para compilar y empaquetar tu aplicación, así como otro comando para ejecutarla.
-
-Uso: Describe cómo utilizar tu API. Incluye información sobre los endpoints disponibles, los parámetros y las respuestas. Puedes incluir ejemplos de solicitudes y respuestas, así como instrucciones para autenticar las solicitudes si es necesario.
-
-Ejemplos de código: Proporciona algunos ejemplos de código para ilustrar cómo utilizar tu API. Por ejemplo, puedes incluir fragmentos de código Java que muestren cómo realizar una solicitud HTTP utilizando la biblioteca RestTemplate de Spring.
-
-Contribución: Anima a los usuarios a contribuir a tu proyecto. Explica cómo pueden hacerlo, por ejemplo, abriendo un problema en GitHub o enviando una solicitud de extracción.
-
-Licencia: Indica la licencia de tu proyecto. Puedes utilizar una plantilla de licencia como la proporcionada por la Open Source Initiative.
-
-Contacto: Proporciona información sobre cómo ponerse en contacto contigo si los usuarios tienen preguntas o comentarios sobre tu API.
-
-
-## Todo API
 
 This is an API I have created for a technical test. In this project, I have created a REST API for tasks, where users can view, create, edit, and delete them while adding a layer of security to perform checks (such as ensuring that the user is logged in to access the different functions and that they cannot edit or delete tasks from other users)
 
@@ -55,7 +35,51 @@ Once the requirements are met, we just need to make sure to load the Maven depen
 
 The project is built as follows: We have the models section where the entities for tasks and users are constructed. For the latter, we use an embedded class for the users' address. We also have the repositories section where the repositories for each entity are located with the functions that will serve as queries for our functionalities.
 
-We also have a configuration directory where we declare the Spring security configuration properties, as well as a customuserdetails class that allows us to make extra use of security login data.
+We also have a configuration directory where we declare the Spring security configuration properties, as well as a customuserdetails class that allows us to make extra use of security login data. In the security configuration class, we mark the routes declared in the controller that require the user to be logged in to access the data.
 
+Afterwards, we have the services where most of the API logic is located. We have the UserService that provides us with all the functionalities of the API, such as creating, modifying, retrieving and deleting tasks. This service has an interface that we use to link it to the controller so that if changes need to be made to the service later, it will not affect the controller. We also have a CustomUserDetailsService that serves to load user information upon login.
 
+Finally, we have the UserController that provides us with different endpoints to be able to use the API. We have the options of a REST API to retrieve, create, edit, and delete tasks.
+
+#### Usage
+
+To use the API after completing the requirements and installation, you would only need to activate or upload it to a web server along with the database. Once the API is activated, you only have to make calls to the following endpoints written in the controller to get the data.
+
+~~~
+@PostMapping("/todos/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Todo createTodo(@RequestBody TodoDTO todoDTO)
+    
+@PutMapping("/todos/edit")
+    @ResponseStatus(HttpStatus.OK)
+    public Todo editTodo(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long id, @RequestBody TodoDTO todoDTO)
+    
+@DeleteMapping("/todos/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteTodo(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long todoId)
+    
+@GetMapping("/todos/get-todos")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<List<Object[]>> getTodos(@RequestParam(required = false) String searchText, @RequestParam(required = false) String userName, Pageable pageable)
+~~~
+
+In the technical test, it is required that the GET request shows paginated results. To achieve this from the backend, I have used the Pageable object, which by default gives us pagination of the information from the database. But to comply with the test requirements that only ten entries are shown each time a request is made, we can add a parameter in the URL called "size" and indicate that we want 10 entries. We can also request the specific page we want using the "page" parameter, and even sort the results using "sort".
+
+#### Postman Collection for API Requests
+
+The project includes a file named 'Spring Todo.postman_collection.json' that contains a set of API requests used to verify the proper functionality of the API using the Postman application. The responses given by the API are also displayed
+
+#### Technical challenge
+
+For the creation of this API, what has been most challenging for me is the inclusion of result pagination, as it is something completely new to me. However, it is very useful because it restricts the amount of data that needs to be moved per request, making the whole process consume fewer resources and more scalable. On the other hand, this has caused me a big problem as I have not been able to create direct tests of the service or repository since the object returned by pagination could not be managed well from Java code.
+
+Nevertheless, I am satisfied with the result of the controller tests where it shows that the controller endpoints, the security used to make checks, such as the logic of the services and the repositories work, because if something fails, the endpoints will not function properly.
+
+#### Contact
+
+Joaquim Crous - [@quim_dev](https://twitter.com/quim_dev) - joaquimcrous@gmail.com
+
+Project Link: [https://github.com/QuimCrous](https://github.com/QuimCrous/spring-todo)
+
+Presentation Link: [https://www.linkedin.com/in/joaquim-crous-mayné/](https://www.linkedin.com/in/joaquim-crous-mayné/)
 
