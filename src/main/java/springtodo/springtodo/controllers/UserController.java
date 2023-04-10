@@ -8,7 +8,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import springtodo.springtodo.DTOs.TodoDTO;
+import springtodo.springtodo.DTOs.UserDTO;
 import springtodo.springtodo.models.Todo;
+import springtodo.springtodo.models.User;
 import springtodo.springtodo.services.interfaces.UserServiceInterface;
 
 import java.util.List;
@@ -46,6 +48,18 @@ public class UserController {
         Optional<String> optionalUserName = Optional.ofNullable(userName);
         Page<List<Object[]>> todoPage = userServiceInterface.getTodos(pageable, optionalText, optionalUserName);
         return todoPage;
+    }
+
+    @PostMapping("/user/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public User createUser(@RequestBody UserDTO userDTO){
+        return userServiceInterface.createUser(userDTO.getName(), userDTO.getUserName(), userDTO.getPassword(), userDTO.getAddress());
+    }
+
+    @DeleteMapping("/user/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUser(@AuthenticationPrincipal UserDetails userDetails){
+        userServiceInterface.deleteUser(userDetails.getUsername());
     }
 
 

@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import springtodo.springtodo.embedables.Address;
 import springtodo.springtodo.models.Todo;
 import springtodo.springtodo.models.User;
 import springtodo.springtodo.repositories.TodoRepository;
@@ -24,6 +26,9 @@ public class UserService implements UserServiceInterface {
 
     @Autowired
     TodoRepository todoRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public Todo createTodo(String title, Long userId, boolean completed) {
         User user = userRepository.findById(userId).get();
@@ -55,5 +60,13 @@ public class UserService implements UserServiceInterface {
             return todoRepository.findTodoDetails(searchText.get(), userName.get(), pageable);
         }
 
+    }
+
+    public User createUser(String name, String userName, String password, Address userAddress){
+        return userRepository.save(new User(name, userName, passwordEncoder.encode(password), userAddress));
+    }
+
+    public void deleteUser(String userName){
+        userRepository.delete(userRepository.findByUserName(userName).get());
     }
 }

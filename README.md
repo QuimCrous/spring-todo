@@ -40,7 +40,7 @@ We also have a configuration directory where we declare the Spring security conf
 
 Afterwards, we have the services where most of the API logic is located. We have the UserService that provides us with all the functionalities of the API, such as creating, modifying, retrieving and deleting tasks. This service has an interface that we use to link it to the controller so that if changes need to be made to the service later, it will not affect the controller. We also have a CustomUserDetailsService that serves to load user information upon login.
 
-Finally, we have the UserController that provides us with different endpoints to be able to use the API. We have the options of a REST API to retrieve, create, edit, and delete tasks.
+Finally, we have the UserController that provides us with different endpoints to be able to use the API. We have the options of a REST API to retrieve, create, edit, and delete tasks. I have also added the option to create and delete users even though it was not a requirement of the technical test
 
 #### Usage
 
@@ -74,7 +74,9 @@ The project includes a file named 'Spring Todo.postman_collection.json' that con
 
 For the creation of this API, what has been most challenging for me is the inclusion of result pagination, as it is something completely new to me. However, it is very useful because it restricts the amount of data that needs to be moved per request, making the whole process consume fewer resources and more scalable. On the other hand, this has caused me a big problem as I have not been able to create direct tests of the service or repository since the object returned by pagination could not be managed well from Java code.
 
-Nevertheless, I am satisfied with the result of the controller tests where it shows that the controller endpoints, the security used to make checks, such as the logic of the services and the repositories work, because if something fails, the endpoints will not function properly.
+Nevertheless, I am satisfied with the result of the controller tests where it shows that the controller endpoints, the security used to make checks, such as the logic of the services and the repositories work, because if something fails, the endpoints will not function properly. However, I have decided to add repository and service tests to make the necessary checks.
+
+
 
 #### Contact
 

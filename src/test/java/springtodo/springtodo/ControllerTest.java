@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import springtodo.springtodo.DTOs.TodoDTO;
+import springtodo.springtodo.DTOs.UserDTO;
+import springtodo.springtodo.embedables.Address;
 import springtodo.springtodo.models.Todo;
 import springtodo.springtodo.repositories.TodoRepository;
 import springtodo.springtodo.repositories.UserRepository;
@@ -47,7 +49,6 @@ public class ControllerTest {
     @DisplayName("Get Todos works ok")
     void getTodosWorkOk() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/todos/get-todos").param("size","10").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
         Assertions.assertTrue(mvcResult.getResponse().getContentAsString().contains("[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Do test to controllers\",\"jhonny_87\",\"Country\",false]"));
     }
 
@@ -55,7 +56,6 @@ public class ControllerTest {
     @DisplayName("Get Todos using search text works ok")
     void getTodosWithSearchTextWorksOk() throws Exception{
         MvcResult mvcResult = mockMvc.perform(get("/todos/get-todos").param("searchText","Do").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
         Assertions.assertTrue(mvcResult.getResponse().getContentAsString().contains("[\"Do test to controllers\",\"jhonny_87\",\"Country\",false],[\"Do the laundry\",\"miky_doe\",\"Country\",false],[\"Do a list of Todos\",\"miky_doe\",\"Country\",true],[\"Another test todo\",\"miky_doe\",\"Country\",false],[\"Do test to controllers\",\"miky_doe\",\"Country\",false]"));
     }
 
@@ -63,7 +63,6 @@ public class ControllerTest {
     @DisplayName("Get Todos using username works ok")
     void getTodosWithUserNameWorksOk() throws Exception{
         MvcResult mvcResult = mockMvc.perform(get("/todos/get-todos").param("userName","jhonny_87").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
         Assertions.assertTrue(mvcResult.getResponse().getContentAsString().contains("[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Make test to controllers\",\"jhonny_87\",\"Country\",false],[\"Do test to controllers\",\"jhonny_87\",\"Country\",false]"));
     }
 
@@ -71,7 +70,6 @@ public class ControllerTest {
     @DisplayName("Get Todos using search text and username works ok")
     void getTodosWithUserNameAndTextWorksOk() throws Exception{
         MvcResult mvcResult = mockMvc.perform(get("/todos/get-todos").param("userName","miky_doe").param("searchText","do").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
         Assertions.assertTrue(mvcResult.getResponse().getContentAsString().contains("[\"Do the laundry\",\"miky_doe\",\"Country\",false],[\"Do a list of Todos\",\"miky_doe\",\"Country\",true],[\"Another test todo\",\"miky_doe\",\"Country\",false],[\"Do test to controllers\",\"miky_doe\",\"Country\",false]"));
     }
 
@@ -81,7 +79,7 @@ public class ControllerTest {
         TodoDTO todoDTO = new TodoDTO("Test creation",true, 2L);
         String body = objectMapper.writeValueAsString(todoDTO);
         MvcResult mvcResult = mockMvc.perform(post("/todos/create").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
-        Assertions.assertTrue(todoRepository.findById(21L).isPresent());
+        Assertions.assertTrue(todoRepository.findById(22L).isPresent());
     }
 
     @Test
@@ -91,7 +89,6 @@ public class ControllerTest {
         TodoDTO todoDTO = new TodoDTO("Make test to controllers 2",true, null);
         String body = objectMapper.writeValueAsString(todoDTO);
         MvcResult mvcResult = mockMvc.perform(put("/todos/edit").param("id","1").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
         Assertions.assertTrue(mvcResult.getResponse().getContentAsString().contains("\"id\":1,\"title\":\"Make test to controllers 2\",\"completed\":true,\"todoUser\":{\"userId\":1,\"name\":\"Jhon Doe\""));
     }
 
@@ -120,6 +117,19 @@ public class ControllerTest {
     void deleteTodoThrowsExceptionNotCorrectUser() throws Exception {
         MvcResult mvcResult = mockMvc.perform(delete("/todos/delete").param("todoId","2").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden()).andReturn();
         Assertions.assertTrue(mvcResult.getResolvedException().toString().contains("403 FORBIDDEN \"You are not the user asigned to this Todo\""));
+    }
+
+    @Test
+    @DisplayName("Create and Delete User works ok")
+    @WithMockUser("mmC0d3")
+    void createAndDeleteUserWorksOk() throws Exception {
+        UserDTO userDTO = new UserDTO("Martin Martin", "mmC0d3", "123456", new Address("Street One", "City One", "Z0845", "Country"));
+        String body = objectMapper.writeValueAsString(userDTO);
+        MvcResult mvcResult = mockMvc.perform(post("/user/create").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
+        Assertions.assertTrue(userRepository.findByUserName("mmC0d3").isPresent());
+        MvcResult mvcResult1 = mockMvc.perform(delete("/user/delete").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+        Assertions.assertFalse(userRepository.findByUserName("mmC0d3").isPresent());
+
     }
 
 }
