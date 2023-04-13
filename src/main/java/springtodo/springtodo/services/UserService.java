@@ -50,6 +50,7 @@ public class UserService implements UserServiceInterface {
     }
 
     public Page<List<Object[]>> getTodos(Pageable pageable, Optional<String> searchText, Optional<String> userName){
+
         if (searchText.isEmpty() && userName.isEmpty()) {
             return todoRepository.findTodoDetails(pageable);
         } else if (searchText.isPresent() && userName.isEmpty()) {
@@ -69,4 +70,24 @@ public class UserService implements UserServiceInterface {
     public void deleteUser(String userName){
         userRepository.delete(userRepository.findByUserName(userName).get());
     }
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
+
+    public User getUser(String userName){
+        return userRepository.findByUserName(userName).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    public List<Todo> getUserTodos(String userName){
+        User user = userRepository.findByUserName(userName).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        List<Todo> todos = user.getTodos();
+        return todos;
+    }
+
+    public Todo getTodoById(Long todoId){
+        return todoRepository.findById(todoId).get();
+    }
+
+
 }

@@ -11,6 +11,8 @@ public class TodoDTO {
 
     private Long userId;
 
+    public TodoDTO() {
+    }
 
     public TodoDTO(String title, boolean isCompleted, Long userId) {
         this.title = title;

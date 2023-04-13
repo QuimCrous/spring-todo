@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import springtodo.springtodo.services.CustomUserDetailsService;
 
 @EnableWebSecurity
@@ -33,12 +34,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.httpBasic();
+        http.httpBasic().and().formLogin().and().logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 
         http.authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/todos/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/todos/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/todos/**").authenticated()
+                .requestMatchers(HttpMethod.GET,"/hello").authenticated()
                 .anyRequest()
                 .authenticated();
 
