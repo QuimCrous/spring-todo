@@ -83,6 +83,7 @@ public class WebController {
     }
 
     @PostMapping("/mytodos/{id}/update")
+    //@ResponseStatus(HttpStatus.OK)
     public String updateTodo(@PathVariable("id") Long id, @ModelAttribute("todo") TodoDTO todoDTO, @AuthenticationPrincipal UserDetails userDetails) {
         Todo updatedTodo = userService.editTodo(userDetails.getUsername(),todoDTO.getTitle(),todoDTO.isCompleted(), id);
 
@@ -90,6 +91,7 @@ public class WebController {
     }
 
     @GetMapping("/mytodos/{id}/delete")
+    //@ResponseStatus(HttpStatus.OK)
     public String deleteTodo(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails) {
         userService.deleteTodo(userDetails.getUsername(), id);
 
