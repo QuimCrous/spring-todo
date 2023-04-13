@@ -39,8 +39,12 @@
         <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" id="title" name="title" th:field="*{title}" required/>
     </div>
     <div>
-        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="userId">User ID:</label>
-        <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="number" id="userId" name="userId" th:field="*{userId}" required/>
+
+        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
+        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" th:field="*{userId}" required>
+            <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.userName}"></option>
+        </select>
+
     </div>
     <div>
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="completed">Is completed?</label>
