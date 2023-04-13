@@ -2,6 +2,7 @@ package springtodo.springtodo;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class WebControllerTest {
 
 
     @Test
+    @DisplayName("Get all todos works Ok")
     public void testGetAllTodos() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(get("/")
@@ -57,6 +59,7 @@ public class WebControllerTest {
     }
 
     @Test
+    @DisplayName("Show create todo form works Ok")
     public void testShowCreateTodoForm() throws Exception{
         MvcResult mvcResult = mockMvc.perform(get("/createtodo"))
                 .andExpect(status().isOk())
@@ -65,6 +68,7 @@ public class WebControllerTest {
     }
 
     @Test
+    @DisplayName("Create todo works Ok")
     public void testCreateTodo() throws Exception{
         MvcResult mvcResult = mockMvc.perform(post("/createtodo/create")
                         .param("title", "test title")
@@ -76,6 +80,7 @@ public class WebControllerTest {
 
     @Test
     @WithMockUser("jhonny_87")
+    @DisplayName("Get user todos works Ok")
     public void testGetMyTodos() throws Exception{
         MvcResult mvcResult = mockMvc.perform(get("/mytodos")).andExpect(status().isOk())
                 .andExpect(view().name("my-todos")).andReturn();
@@ -83,6 +88,7 @@ public class WebControllerTest {
 
     @Test
     @WithMockUser("jhonny_87")
+    @DisplayName("Update todo works Ok")
     public void testUpdateTodo() throws Exception{
         MvcResult mvcResult = mockMvc.perform(post("/mytodos/1/update")
                         .param("title", "Updated Todo")
@@ -96,11 +102,39 @@ public class WebControllerTest {
 
     @Test
     @WithMockUser("jhonny_87")
+    @DisplayName("Delete todo works Ok")
     public void testDeleteTodo() throws Exception{
         MvcResult mvcResult = mockMvc.perform(get("/mytodos/1/delete"))
                 .andExpect(status().isFound())
                 .andExpect(view().name("redirect:/mytodos")).andReturn();
 
         Assertions.assertFalse(todoRepository.findById(1L).isPresent());
+    }
+
+    @Test
+    @WithMockUser("miky_doe")
+    @DisplayName("Update todo throws exception wrong user")
+    public void testUpdateTodoThrowsException() throws Exception{
+        MvcResult mvcResult = mockMvc.perform(post("/mytodos/1/update")
+                        .param("title", "Updated Todo")
+                        .param("completed", "true"))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+
+        Assertions.assertTrue(mvcResult.getResolvedException().toString().contains("403 FORBIDDEN \"You are not the user asigned to this Todo\""));
+
+    }
+
+    @Test
+    @WithMockUser("miky_doe")
+    @DisplayName("Delete todo throws exception wrong user")
+    public void testDeleteTodoThrowsException() throws Exception{
+        MvcResult mvcResult = mockMvc.perform(get("/mytodos/1/delete"))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+
+        Assertions.assertTrue(mvcResult.getResolvedException().toString().contains("403 FORBIDDEN \"You are not the user asigned to this Todo\""));
     }
 }

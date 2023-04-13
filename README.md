@@ -18,6 +18,12 @@ spring.jpa.hibernate.ddl-auto=create
 
 server.port=8082
 spring.jpa.show-sql=true
+
+spring.thymeleaf.enabled=true
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+spring.thymeleaf.mode=HTML5
+spring.resources.static-locations=classpath:/static/
 ~~~
 
 The first line adds the path where the MySQL database is located, which in my case was localhost:3306 due to my MySQL configuration, and specifies the name of the schema to be used, which in my case is 'todo'

@@ -83,4 +83,18 @@ public class ServiceTest {
         });
     }
 
+    @Test
+    @DisplayName("Get all users works Ok")
+    void getAllUsersWorksOk(){
+        List<User> userList = userService.getAllUsers();
+        Assertions.assertEquals(userList.size(), 2);
+        Assertions.assertFalse(userList.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Get todo by id works Ok")
+    void getTodoByIdWorksOk(){
+        Todo todo = userService.getTodoById(1L);
+        Assertions.assertEquals(todo.getTitle(), "Make test to controllers");
+    }
 }

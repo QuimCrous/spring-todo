@@ -71,6 +71,7 @@ public class UserService implements UserServiceInterface {
         userRepository.delete(userRepository.findByUserName(userName).get());
     }
 
+    //Methods used in the new controller created to perform the front-end
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
