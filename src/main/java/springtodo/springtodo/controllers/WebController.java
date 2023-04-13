@@ -3,6 +3,7 @@ package springtodo.springtodo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,16 +27,23 @@ public class WebController {
 
 
     @GetMapping("/")
-    public String getAllTodos(Model model, @RequestParam(required = false) Integer page, @RequestParam(required = false) String searchText, @RequestParam(required = false) String userName){
+    public String getAllTodos(Model model, @RequestParam(required = false) Integer page, @RequestParam(required = false) String searchText, @RequestParam(required = false) String userName, @RequestParam(required = false, defaultValue = "title") String sortBy,
+                              @RequestParam(required = false, defaultValue = "asc") String sortDirection){
         Optional<String> optionalText = Optional.ofNullable(searchText);
         Optional<String> optionalUserName = Optional.ofNullable(userName);
         Page<List<Object[]>> todoPage;
         if (page != null){
-            todoPage = userService.getTodos(PageRequest.of(page,10), optionalText, optionalUserName);
+            //todoPage = userService.getTodos(PageRequest.of(page,10), optionalText, optionalUserName);
+            todoPage = userService.getTodos(PageRequest.of(page,10, Sort.by(sortDirection.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy)), optionalText, optionalUserName);
+
         } else {
-            todoPage = userService.getTodos(PageRequest.of(0,10), optionalText, optionalUserName);
+            //todoPage = userService.getTodos(PageRequest.of(0,10), optionalText, optionalUserName);
+            todoPage = userService.getTodos(PageRequest.of(0,10, Sort.by(sortDirection.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy)), optionalText, optionalUserName);
+
         }
         model.addAttribute("todos", todoPage);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDirection", sortDirection);
         return "gettodos";
     }
 

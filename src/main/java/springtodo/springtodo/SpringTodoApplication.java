@@ -35,16 +35,16 @@ public class SpringTodoApplication implements CommandLineRunner {
 		//We generated two users to populate the table for the tests.
 		User user = new User("Jhon Doe", "jhonny_87", passwordEncoder.encode("123456"), new Address("Street One", "City One", "Z0845", "Country"));
 		userRepository.save(user);
-		User user1 = new User("Mike Doe", "miky_doe", passwordEncoder.encode("123456"), new Address("Street One", "City One", "Z0845", "Country"));
+		User user1 = new User("Mike Doe", "miky_doe", passwordEncoder.encode("123456"), new Address("Street One", "City One", "Z0845", "Spain"));
 		userRepository.save(user1);
 
 		//We generated some Todos to populate the table for the tests.
 		Todo todo1 = new Todo("Make test to controllers", false, user);
 		Todo todo2 = new Todo("Make test to controllers", false, user);
-		Todo todo3 = new Todo("Make test to controllers", false, user);
+		Todo todo3 = new Todo("Make test to controllers", true, user);
 		Todo todo4 = new Todo("Make test to controllers", false, user);
 		Todo todo5 = new Todo("Make test to controllers", false, user);
-		Todo todo6 = new Todo("Make test to controllers", false, user);
+		Todo todo6 = new Todo("Make test to controllers", true, user);
 		Todo todo7 = new Todo("Make test to controllers", false, user);
 		Todo todo8 = new Todo("Make test to controllers", false, user);
 		Todo todo9 = new Todo("Make test to controllers", false, user);

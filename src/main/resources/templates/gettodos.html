@@ -49,17 +49,17 @@
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
-            <th scope="col" class="px-6 py-3">
-                Title
+            <th scope="col" class="px-6 py-3" >
+                <a th:href="@{${url}(sortDirection=${sortDirection == 'asc' ? 'desc' : 'asc'}, sortBy='title')}">Title</a>
             </th>
             <th scope="col" class="px-6 py-3">
-                User
+                <a th:href="@{${url}(sortDirection=${sortDirection == 'asc' ? 'desc' : 'asc'}, sortBy='todoUser')}">User Name</a>
             </th>
             <th scope="col" class="px-6 py-3">
-                Country
+                <a th:href="@{${url}(sortDirection=${sortDirection == 'asc' ? 'desc' : 'asc'}, sortBy='todoUser.userAddress.country')}">Country</a>
             </th>
             <th scope="col" class="px-6 py-3">
-                Is Complete?
+                <a th:href="@{${url}(sortDirection=${sortDirection == 'asc' ? 'desc' : 'asc'}, sortBy='completed')}">Is Complete?</a>
             </th>
         </tr>
         </thead>
@@ -81,27 +81,28 @@
 <div th:if="${todos.totalPages > 1}">
     <div>
         <span th:if="${todos.hasPrevious()}">
-            <a class="text-gray-900 dark:text-white text-2xl" th:href="@{/(page=1)}">&lt;&lt;</a>
+            <a class="text-gray-900 dark:text-white text-2xl" th:href="@{${url}(page=1, sortBy=${sortBy}, sortDirection=${sortDirection})}">&lt;&lt;</a>
         </span>
         <span th:if="${todos.hasPrevious()}">
-            <a class="text-gray-900 dark:text-white text-2xl" th:href="@{/(page=${todos.previousPageable().pageNumber})}">&lt;</a>
+            <a class="text-gray-900 dark:text-white text-2xl" th:href="@{${url}(page=${todos.previousPageable().pageNumber}, sortBy=${sortBy}, sortDirection=${sortDirection})}">&lt;</a>
         </span>
         <span th:each="pageNumber : ${#numbers.sequence(1, todos.totalPages)}">
             <span th:if="${todos.number + 1 == pageNumber}">
                 <strong th:text="${pageNumber}"></strong>
             </span>
             <span th:unless="${todos.number + 1 == pageNumber}">
-                <a class="text-gray-900 dark:text-white text-2xl" th:href="@{/(page=${pageNumber - 1})}" th:text="${pageNumber}"></a>
+                <a class="text-gray-900 dark:text-white text-2xl" th:href="@{${url}(page=${pageNumber - 1}, sortBy=${sortBy}, sortDirection=${sortDirection})}" th:text="${pageNumber}"></a>
             </span>
         </span>
         <span th:if="${todos.hasNext()}">
-            <a class="text-gray-900 dark:text-white text-2xl" th:href="@{/(page=${todos.nextPageable().pageNumber})}">&gt;</a>
+            <a class="text-gray-900 dark:text-white text-2xl" th:href="@{${url}(page=${todos.nextPageable().pageNumber}, sortBy=${sortBy}, sortDirection=${sortDirection})}">&gt;</a>
         </span>
         <span th:if="${todos.hasNext()}">
-            <a class="text-gray-900 dark:text-white text-2xl" th:href="@{/(page=${todos.totalPages - 1})}">&gt;&gt;</a>
+            <a class="text-gray-900 dark:text-white text-2xl" th:href="@{${url}(page=${todos.totalPages - 1}, sortBy=${sortBy}, sortDirection=${sortDirection})}">&gt;&gt;</a>
         </span>
     </div>
 </div>
+
 
 
 </body>
